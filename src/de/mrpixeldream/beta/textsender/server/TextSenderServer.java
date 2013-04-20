@@ -133,7 +133,18 @@ public class TextSenderServer
 	public static void doLogout(InetAddress addr)
 	{
 		String clientID = ips.get(addr);
+		sendMessage(clientID, "Logging you out...");
+		Socket sock = clients.get(clientID);
 		clients.remove(clientID);
+		try
+		{
+			sock.close();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		names.remove(clientID);
 		ips.remove(addr);
 	}

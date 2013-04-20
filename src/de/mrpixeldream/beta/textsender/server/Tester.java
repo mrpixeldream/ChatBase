@@ -18,7 +18,6 @@ public class Tester
 			System.out.print("Bitte Usernamen eingeben: ");
 			Scanner console = new Scanner(System.in);
 			String user = console.nextLine();
-			console.close();
 			
 			System.out.println("Schreibe Login Kommando...");
 			writer.println("LOGIN " + user);
@@ -30,9 +29,13 @@ public class Tester
 			writer.println("LOGOUT");
 			writer.flush();
 			
-			sock.close();
+			System.out.println("Beliebige Taste drücken...");
+			console.nextLine();
+			
+			console.close();
 			reader.close();
 			writer.close();
+			sock.close();
 		}
 		catch (IOException e)
 		{
