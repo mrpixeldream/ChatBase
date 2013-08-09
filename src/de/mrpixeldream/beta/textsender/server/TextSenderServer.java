@@ -29,7 +29,7 @@ public class TextSenderServer
 	
 	public static void main(String[] args)
 	{
-		File logfile = new File("C:/Users/Niklas/Desktop/logfile.log"); // TODO: Pfad anpassen!
+		File logfile = new File("DEBUGPATH"); // TODO: Pfad anpassen!
 		
 		clients = new HashMap<String, Socket>();
 		names = new HashMap<String, String>();
