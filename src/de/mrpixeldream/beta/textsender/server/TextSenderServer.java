@@ -106,7 +106,7 @@ public class TextSenderServer
 	public static String doLogin(Socket client, String name)
 	{
 		String id;
-		if (!clients.containsValue(client.getInetAddress()) && !names.containsValue(name))
+		if (!clients.containsValue(client.getInetAddress()) && !names.containsValue(name) && !ips.containsKey(client.getInetAddress()))
 		{
 			do
 			{
@@ -123,6 +123,10 @@ public class TextSenderServer
 		else if (names.containsValue(name))
 		{
 			return "This user is already online!";
+		}
+		else if (ips.containsKey(client.getInetAddress()))
+		{
+			return "This IP is already connected!";
 		}
 		else
 		{

@@ -63,7 +63,13 @@ public class ClientHandler extends Thread
 			if (msg.startsWith("SEND"))
 			{
 				String id = msg.split(" ")[1];
-				String send = msg.split(" ")[2];
+				String send = "";
+				
+				for (int i = 2; i < msg.split(" ").length; i++)
+				{
+					send += msg.split(" ")[i] + " ";
+				}
+				
 				try
 				{
 					Integer.parseInt(id);
