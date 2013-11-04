@@ -1,12 +1,14 @@
 package de.mrpixeldream.beta.textsender.server;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -16,7 +18,7 @@ public class TextSenderServer
 {
 	static int port;
 	
-	static PrintWriter logger;
+	static FileWriter logger;
 	
 	static HashMap<String, Socket> clients;
 	static HashMap<String, String> names;
@@ -29,21 +31,28 @@ public class TextSenderServer
 	
 	public static void main(String[] args)
 	{
-		File logfile = new File("DEBUGPATH"); // TODO: Pfad anpassen!
+		File logfile = new File("C:\\Users\\Niklas\\Desktop\\chatbase.log"); // TODO: Pfad anpassen!
+		
+		System.out.println("Welcome to ChatBase chat server! The small chat solution.");
+		System.out.println("Setting up variables...");
 		
 		clients = new HashMap<String, Socket>();
 		names = new HashMap<String, String>();
 		ips = new HashMap<InetAddress, String>();
 		ids = new HashMap<String, String>();
 		
+		System.out.println("Done. Creating logger...");
+		
 		try
 		{
-			logger = new PrintWriter(logfile);
+			logger = new FileWriter(logfile, true);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
+		
+		System.out.println("Logger created, events are logged now.");
 		
 		if (args.length == 1)
 		{
@@ -51,6 +60,7 @@ public class TextSenderServer
 			try
 			{
 				log("Set port to " + port);
+				System.out.println("Server port: " + port);
 			}
 			catch (Exception e)
 			{
@@ -63,6 +73,7 @@ public class TextSenderServer
 			try
 			{
 				log("Set port to " + port);
+				System.out.println("Server port: " + port);
 			}
 			catch (Exception e)
 			{
@@ -71,9 +82,13 @@ public class TextSenderServer
 		}
 		
 		log("Creating socket...");
+		System.out.println("Creating socket...");
+		
 		try
 		{
 			server = new ServerSocket(port);
+			System.out.println("Server now listening for new connections...");
+			
 			while (true)
 			{
 				Socket client;
@@ -88,19 +103,38 @@ public class TextSenderServer
 			log(e.getMessage());
 		}
 		
-		
-		logger.flush();
-		logger.close();
+		try
+		{
+			System.out.println("Closing logger...");
+			logger.flush();
+			logger.close();
+			System.out.println("Closed. Server shutting down!");
+		}
+		catch (Exception ex)
+		{
+			System.err.println("Logger not closed properly.");
+		}
 	}
 	
 	private static String datePrefix()
 	{
-		return "[" + new Date(System.currentTimeMillis()) + "]: ";
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd | HH:mm:ss");
+		Date currentTime = new Date(System.currentTimeMillis());
+		return "[" + format.format(currentTime) + "]: ";
 	}
 	
 	public static void log(String msg)
 	{
-		logger.println(datePrefix() + msg);
+		try
+		{
+			logger.write(datePrefix() + msg + "\n\n");
+			logger.flush();
+		}
+		catch (Exception ex)
+		{
+			System.err.println("Can't write to log.");
+		}
+		System.err.println(msg);
 	}
 	
 	public static String doLogin(Socket client, String name)
