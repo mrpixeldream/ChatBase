@@ -22,7 +22,7 @@ public class TextSenderServer
 	
 	static HashMap<String, Socket> clients;
 	static HashMap<String, String> names;
-	static HashMap<InetAddress, String> ips;
+	static public HashMap<InetAddress, String> ips;
 	static HashMap<String, String> ids;
 	
 	static Random idGenerator;
@@ -93,6 +93,7 @@ public class TextSenderServer
 			{
 				Socket client;
 				client = server.accept();
+				System.out.println("Connected from " + client.getInetAddress());
 				new ClientHandler(client).start();
 			}
 		}
@@ -151,7 +152,7 @@ public class TextSenderServer
 			names.put(id, name);
 			ips.put(client.getInetAddress(), id);
 			ids.put(name, id);
-			System.out.println("New connection from " + client.getInetAddress() + " with ID " + id);
+			System.out.println("Logged in from " + client.getInetAddress() + " with ID " + id);
 			return "Successfully logged in! Got ID: " + id;
 		}
 		else if (names.containsValue(name))
@@ -230,6 +231,24 @@ public class TextSenderServer
 			writer.println(message);
 			writer.flush();
 			writer = null;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static void broadcastMessage(String message)
+	{	
+		try
+		{
+			for (String client : clients.keySet())
+			{
+				PrintWriter writer = new PrintWriter(clients.get(client).getOutputStream());
+				writer.println(message);
+				writer.flush();
+				writer = null;
+			}
 		}
 		catch (IOException e)
 		{
