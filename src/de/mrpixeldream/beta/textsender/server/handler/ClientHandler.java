@@ -2,6 +2,7 @@ package de.mrpixeldream.beta.textsender.server.handler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -18,7 +19,7 @@ public class ClientHandler extends Thread
 	{
 		this.client = client;
 		
-		this.id = TextSenderServer.ips.get(client.getInetAddress());
+		
 		
 		try
 		{
@@ -58,6 +59,8 @@ public class ClientHandler extends Thread
 			{
 				this.output.println(TextSenderServer.doLogin(client, msg.split(" ")[1]));
 				this.output.flush();
+				
+				this.id = TextSenderServer.ips.get(client.getInetAddress());
 			}
 			if (msg.toUpperCase().startsWith("SHOW"))
 			{
