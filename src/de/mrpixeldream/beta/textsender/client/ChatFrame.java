@@ -2,8 +2,6 @@ package de.mrpixeldream.beta.textsender.client;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -15,13 +13,19 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
-public class ChatFrame extends JFrame implements ActionListener
+import de.mrpixeldream.beta.textsender.client.controls.ChatBoxActionListener;
+import de.mrpixeldream.beta.textsender.client.controls.ChatBoxMouseListener;
+
+public class ChatFrame extends JFrame
 {
 	public static ChatFrame chatFrame;
 	
 	private JPanel contentPane;
-	private JTextField messageField;
+	public JTextField messageField;
 	private JEditorPane chatPanel;
+	
+	private ChatBoxActionListener chatBoxActionListener = new ChatBoxActionListener(this);
+	private ChatBoxMouseListener chatBoxMouseListener = new ChatBoxMouseListener(this);
 
 	/**
 	 * Launch the application.
@@ -59,13 +63,15 @@ public class ChatFrame extends JFrame implements ActionListener
 		contentPane.setLayout(null);
 		
 		messageField = new JTextField();
-		messageField.setText("Nachricht");
+		messageField.setText("");
 		messageField.setBounds(10, 230, 315, 20);
+		messageField.addActionListener(chatBoxActionListener);
+		messageField.addMouseListener(chatBoxMouseListener);
 		contentPane.add(messageField);
 		messageField.setColumns(10);
 		
 		JButton sendButton = new JButton("Senden");
-		sendButton.addActionListener(this);
+		sendButton.addActionListener(chatBoxActionListener);
 		sendButton.setBounds(335, 229, 89, 23);
 		contentPane.add(sendButton);
 		
@@ -79,12 +85,8 @@ public class ChatFrame extends JFrame implements ActionListener
 		scrollPane.setViewportView(chatPanel);
 		
 		new MessageListener().start();
-	}
-	
-	public void actionPerformed(ActionEvent arg0)
-	{
-		ClientMain.client.sender.println("BROADCAST " + this.messageField.getText());
-		ClientMain.client.sender.flush();
+		
+		messageField.requestFocus();
 	}
 	
 	public void addMessage(String message)

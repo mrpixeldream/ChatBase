@@ -31,7 +31,7 @@ public class TextSenderServer
 	
 	public static void main(String[] args)
 	{
-		File logfile = new File("C:\\Users\\Niklas\\Desktop\\chatbase.log"); // TODO: Pfad anpassen!
+		File logfile = new File("chatbase.log"); // TODO: Pfad anpassen!
 		
 		System.out.println("Welcome to ChatBase chat server! The small chat solution.");
 		System.out.println("Setting up variables...");
@@ -128,7 +128,7 @@ public class TextSenderServer
 	{
 		try
 		{
-			logger.write(datePrefix() + msg + "\n\n");
+			logger.write(datePrefix() + msg + "\n");
 			logger.flush();
 		}
 		catch (Exception ex)

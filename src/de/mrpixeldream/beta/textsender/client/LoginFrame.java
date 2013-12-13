@@ -2,8 +2,6 @@ package de.mrpixeldream.beta.textsender.client;
 
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,13 +11,18 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-public class LoginFrame extends JFrame implements ActionListener
-{
+import de.mrpixeldream.beta.textsender.client.controls.LoginActionListener;
+import de.mrpixeldream.beta.textsender.client.controls.LoginMouseListener;
 
-	private JPanel	contentPane;
-	private JLabel lblBitteEinenBenutzernamen;
-	private JTextField txtName;
-	private JButton btnEinloggen;
+public class LoginFrame extends JFrame
+{
+	public JPanel	contentPane;
+	public JLabel lblBitteEinenBenutzernamen;
+	public JTextField txtName;
+	public JButton btnEinloggen;
+	
+	private LoginActionListener loginActionListener;
+	private LoginMouseListener loginMouseListener;
 
 	/**
 	 * Launch the application.
@@ -48,6 +51,9 @@ public class LoginFrame extends JFrame implements ActionListener
 	 */
 	public LoginFrame()
 	{
+		this.loginActionListener = new LoginActionListener(this);
+		this.loginMouseListener = new LoginMouseListener(this);
+		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 434, 135);
 		this.contentPane = new JPanel();
@@ -65,33 +71,15 @@ public class LoginFrame extends JFrame implements ActionListener
 		this.txtName.setHorizontalAlignment(SwingConstants.CENTER);
 		this.txtName.setText("Name...");
 		this.txtName.setBounds(20, 48, 155, 35);
+		this.txtName.addMouseListener(loginMouseListener);
 		this.contentPane.add(this.txtName);
+		this.txtName.addActionListener(this.loginActionListener);
 		this.txtName.setColumns(10);
 		
-		this.btnEinloggen = new JButton("Einloggen!");
+		this.btnEinloggen = new JButton("Anmelden");
 		this.btnEinloggen.setBounds(257, 48, 108, 35);
-		this.btnEinloggen.addActionListener(this);
+		this.btnEinloggen.addActionListener(this.loginActionListener);
 		this.contentPane.add(this.btnEinloggen);
-	}
-	
-	public void actionPerformed(ActionEvent e)
-	{
-		if (e.getSource() == this.btnEinloggen)
-		{
-			String srvMessage = "LOGIN " + this.txtName.getText().trim();
-			ClientMain.client.sender.println(srvMessage);
-			ClientMain.client.sender.flush();
-			
-			if (!ClientMain.client.receiver.nextLine().startsWith("Successfully"))
-			{
-				System.err.println("Login failure");
-			}
-			else
-			{
-				this.setVisible(false);
-				ChatFrame.main();
-			}
-		}
 	}
 	
 	@Override

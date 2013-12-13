@@ -26,7 +26,7 @@ public class ClientMain
 		try
 		{
 			// Creating a connection to the main server
-			this.connection = new Socket("localhost", 22558);
+			this.connection = new Socket("84.201.35.70", 22558);
 			
 			// Initializing the raw streams to and from
 			this.outStream = new BufferedOutputStream(this.connection.getOutputStream());
